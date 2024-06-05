@@ -1,0 +1,24 @@
+name = "glaml"
+version = "1.0.0"
+
+licences = ["MIT"]
+
+description = "A Gleam wrapper around yamerl that enables your app to read YAML."
+
+repository = { type = "github", user = "katekyy", repo = "glaml" }
+links = [
+    { title = "Website", href = "https://github.com/katekyy/hardcache" },
+    { title = "yamerl", href = "https://hex.pm/packages/yamerl" },
+]
+
+target = "erlang"
+
+[erlang]
+extra_applications = ["yamerl"]
+
+[dependencies]
+gleam_stdlib = ">= 0.34.0 and < 2.0.0"
+yamerl = ">= 0.10.0 and < 1.0.0"
+
+[dev-dependencies]
+gleeunit = ">= 1.0.0 and < 2.0.0"
