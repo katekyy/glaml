@@ -59,7 +59,7 @@ pub fn doc_node(doc: Document) -> DocNode {
 /// "#0" == [Seq(0)]
 /// "combination.#0.of.these" == [Map("combination"), Seq(0), Map("of"), Map("these")]
 /// 
-/// // You can write as many dots as you want
+/// // You can write as many dots as you want - an empty key points at the current node.
 /// "...test..#0." == [Map("test"), Seq(0)]
 /// ```
 /// 
@@ -99,6 +99,29 @@ fn build_sugar(sugar: List(String)) -> Result(List(PathRule), Nil) {
 }
 
 /// Traverses the `DocNode` and tries to find another `DocNode` by matching the `PathRule`s.
+/// 
+/// ## Example
+/// 
+/// ```gleam
+/// let assert Ok(doc) = parse_string("
+/// employees:
+///   - name: Gordon
+///     surname: Befrey
+///     field: Database Infrastructure
+///   - name: Caroline
+///     surname: Gaster
+///     field: Networking
+/// ")
+/// let doc = doc_node(doc)
+/// 
+/// get(doc, [Map("employees"), Seq(0), Map("field")])
+/// // -> Ok(DocNodeStr("Database Infrastructure"))
+/// 
+/// get(doc, [Map("employees"), Seq(1), Map("passwords"), Seq(0)])
+/// //                                  ~~~~~~~~~~~~~~~~
+/// //                                    | reading backwards
+/// // -> Error(NodeNotFound("reverse_idx:1,map:passwords"))
+/// ```
 /// 
 pub fn get(
   from node: DocNode,

@@ -17,7 +17,7 @@ jobs:
   - being a cat
 ")
 
-glaml.sugar(doc, "jobs.#0")
+glaml.sugar(glaml.doc_node(doc), "jobs.#0")
 // -> Ok(DocNodeStr("being a cat"))
 ```
 

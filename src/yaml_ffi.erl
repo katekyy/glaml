@@ -1,6 +1,6 @@
 -module(yaml_ffi).
 
--export([start_yaml/0, parse_file/1, parse_string/1]).
+-export([parse_file/1, parse_string/1]).
 
 -include_lib("yamerl/include/yamerl_errors.hrl").
 
@@ -14,10 +14,6 @@
     | {doc_node_str, binary()}
     | {doc_node_int, integer()}
     | doc_node_nil.
-
-% public
-start_yaml() ->
-    application:start(yamerl).
 
 % public
 -spec parse_file(Path :: binary()) -> {ok, document()} | {error, doc_error()}.
