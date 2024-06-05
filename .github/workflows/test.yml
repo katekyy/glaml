@@ -17,7 +17,7 @@ jobs:
           rebar3-version: "3"
       - name: Prepare
         # we don't need to run ./develop.sh
-        run: gleam desp download
+        run: gleam deps download
       - name: Test
         run: gleam test
       - name: Check formatting
