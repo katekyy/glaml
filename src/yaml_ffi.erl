@@ -13,6 +13,7 @@
     | {doc_node_seq, list(doc_node())}
     | {doc_node_str, binary()}
     | {doc_node_int, integer()}
+    | {doc_node_float, float()}
     | doc_node_nil.
 
 % public
@@ -86,6 +87,8 @@ from_yamerl_node(YamerlNode) ->
             {doc_node_str, list_to_binary(String)};
         {yamerl_int, yamerl_node_int, _, _Line, Integer} ->
             {doc_node_int, Integer};
+        {yamerl_float, yamerl_node_float, _, _Line, Float} ->
+            {doc_node_float, Float};
         {yamerl_seq, yamerl_node_seq, _, _Line, Elements, _Count} ->
             {doc_node_seq, from_yamerl_nodes(Elements)};
         {yamerl_map, yamerl_node_map, _, _Line, Elements} ->

@@ -19,6 +19,7 @@ pub type DocNode {
   DocNodeNil
   DocNodeStr(string: String)
   DocNodeInt(int: Int)
+  DocNodeFloat(float: Float)
   DocNodeSeq(nodes: List(DocNode))
   DocNodeMap(nodes: List(#(DocNode, DocNode)))
 }
