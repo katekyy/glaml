@@ -12,6 +12,7 @@
     {doc_node_map, list({doc_node(), doc_node()})}
     | {doc_node_seq, list(doc_node())}
     | {doc_node_str, binary()}
+    | {doc_node_bool, boolean()}
     | {doc_node_int, integer()}
     | {doc_node_float, float()}
     | doc_node_nil.
@@ -85,6 +86,10 @@ from_yamerl_node(YamerlNode) ->
             doc_node_nil;
         {yamerl_str, yamerl_node_str, _, _Line, String} ->
             {doc_node_str, list_to_binary(String)};
+        {yamerl_bool, yamerl_node_bool, _, _Line, true} ->
+            {doc_node_bool, true};
+        {yamerl_bool, yamerl_node_bool, _, _Line, false} ->
+            {doc_node_bool, false};
         {yamerl_int, yamerl_node_int, _, _Line, Integer} ->
             {doc_node_int, Integer};
         {yamerl_float, yamerl_node_float, _, _Line, Float} ->

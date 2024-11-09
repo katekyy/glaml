@@ -17,6 +17,7 @@ pub type DocError {
 
 pub type DocNode {
   DocNodeNil
+  DocNodeBool(bool: Bool)
   DocNodeStr(string: String)
   DocNodeInt(int: Int)
   DocNodeFloat(float: Float)
