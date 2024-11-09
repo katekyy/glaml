@@ -8,7 +8,7 @@ pub type Document {
 
 /// A Document Error dispatched by yamerl.
 /// It contains a string - `msg` and a tuple of 2 integers - `loc`.
-/// 
+///
 /// The location is: `#(line, column)`.
 ///
 pub type DocError {
@@ -34,35 +34,35 @@ pub type PathRule {
 }
 
 /// Parses the YAML file at `path` and returns either `Ok(Document(...))` or `Error(DocError(...))`.
-/// 
+///
 @external(erlang, "yaml_ffi", "parse_file")
 pub fn parse_file(path: String) -> Result(Document, DocError)
 
 /// Parses the YAML string and returns either `Ok(Document(...))` or `Error(DocError(...))`.
-/// 
+///
 @external(erlang, "yaml_ffi", "parse_string")
 pub fn parse_string(string: String) -> Result(Document, DocError)
 
 /// Returns the root node of the `Document`.
-/// 
+///
 pub fn doc_node(doc: Document) -> DocNode {
   doc.root
 }
 
 /// Does the same thing as `get` but instead of a list of `PathRule`s,
 /// you write a `String` that will get parsed into a list of `PathRule`s for you.
-/// 
+///
 /// ## Syntax
-/// 
+///
 /// ```gleam
 /// "some_key" == [Map("some_key")]
 /// "#0" == [Seq(0)]
 /// "combination.#0.of.these" == [Map("combination"), Seq(0), Map("of"), Map("these")]
-/// 
+///
 /// // You can write as many dots as you want - an empty key points at the current node.
 /// "...test..#0." == [Map("test"), Seq(0)]
 /// ```
-/// 
+///
 pub fn sugar(
   from node: DocNode,
   to path: String,
@@ -99,9 +99,9 @@ fn build_sugar(sugar: List(String)) -> Result(List(PathRule), Nil) {
 }
 
 /// Traverses the `DocNode` and tries to find another `DocNode` by matching the `PathRule`s.
-/// 
+///
 /// ## Example
-/// 
+///
 /// ```gleam
 /// let assert Ok(doc) = parse_string("
 /// employees:
@@ -113,16 +113,16 @@ fn build_sugar(sugar: List(String)) -> Result(List(PathRule), Nil) {
 ///     field: Networking
 /// ")
 /// let doc = doc_node(doc)
-/// 
+///
 /// get(doc, [Map("employees"), Seq(0), Map("field")])
 /// // -> Ok(DocNodeStr("Database Infrastructure"))
-/// 
+///
 /// get(doc, [Map("employees"), Seq(1), Map("passwords"), Seq(0)])
 /// //                                  ~~~~~~~~~~~~~~~~
 /// //                                    | reading backwards
 /// // -> Error(NodeNotFound("reverse_idx:1,map:passwords"))
 /// ```
-/// 
+///
 pub fn get(
   from node: DocNode,
   to path: List(PathRule),
