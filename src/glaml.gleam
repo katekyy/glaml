@@ -83,7 +83,7 @@ fn build_sugar(sugar: List(String)) -> Result(List(PathRule), Nil) {
     [elem, ..tail] ->
       case string.starts_with(elem, "#") {
         True ->
-          case int.parse(string.drop_left(elem, 1)) {
+          case int.parse(string.drop_start(elem, 1)) {
             Ok(idx) ->
               case build_sugar(tail) {
                 Ok(tail) -> Ok([Seq(idx), ..tail])
