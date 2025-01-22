@@ -1,5 +1,5 @@
 name = "glaml"
-version = "2.0.0"
+version = "3.0.0"
 
 licences = ["MIT"]
 
@@ -7,7 +7,7 @@ description = "A Gleam wrapper around yamerl that enables your app to read YAML.
 
 repository = { type = "github", user = "katekyy", repo = "glaml" }
 links = [
-    { title = "Website", href = "https://github.com/katekyy/hardcache" },
+    { title = "Website", href = "https://github.com/katekyy/glaml" },
     { title = "yamerl", href = "https://hex.pm/packages/yamerl" },
 ]
 
