@@ -10,15 +10,15 @@ import glaml
 
 // ...
 
-let assert Ok(doc) = glaml.parse_string("
-test: 4
+let assert Ok([doc]) = glaml.parse_string("
+stars: 7
 this-is-nil:
 jobs:
   - being a cat
 ")
 
-glaml.sugar(glaml.doc_node(doc), "jobs.#0")
-// -> Ok(DocNodeStr("being a cat"))
+glaml.select_sugar(glaml.document_root(doc), "jobs.#0")
+// -> Ok(NodeStr("being a cat"))
 ```
 
 Further documentation can be found at <https://hexdocs.pm/glaml>.
