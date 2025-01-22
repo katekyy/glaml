@@ -1,8 +1,0 @@
-- name: Gleam
-  repo-url: https://github.com/gleam-lang/gleam
-  nil:
-  nil2: null
-  items:
-    milk: 1L
-    apple: 10
-    egg: dozen

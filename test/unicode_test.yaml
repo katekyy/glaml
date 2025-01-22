@@ -1,0 +1,4 @@
+records:
+  - region: "jp"
+    title: "健康サポート" # "Health support" in Japanese
+    proxied: true

@@ -7,99 +7,83 @@ pub fn main() {
   gleeunit.main()
 }
 
-pub fn parser_test() {
-  glaml.parse_file("./test/test.yaml")
-  |> should.equal(
-    Ok(
-      glaml.Document(
-        glaml.DocNodeSeq([
-          glaml.DocNodeMap([
-            #(glaml.DocNodeStr("name"), glaml.DocNodeStr("katekyy")),
-            #(glaml.DocNodeStr("x"), glaml.DocNodeInt(7)),
-          ]),
-        ]),
-      ),
+pub fn parse_string_test() {
+  let assert Ok([a, b]) =
+    glaml.parse_string("x: 2048\ny: 4096\nz: 1024\n---\nx: 0\ny: 0\nz: 0")
+
+  should.equal(
+    a,
+    glaml.Document(
+      glaml.NodeMap([
+        #(glaml.NodeStr("x"), glaml.NodeInt(2048)),
+        #(glaml.NodeStr("y"), glaml.NodeInt(4096)),
+        #(glaml.NodeStr("z"), glaml.NodeInt(1024)),
+      ]),
     ),
   )
 
-  glaml.parse_string(
-    "
-id: 7
-jobs:
-  - image: ubuntu:latest
-    username: stay-calm
-  ",
-  )
-  |> should.equal(
-    Ok(
-      glaml.Document(
-        glaml.DocNodeMap([
-          #(glaml.DocNodeStr("id"), glaml.DocNodeInt(7)),
-          #(
-            glaml.DocNodeStr("jobs"),
-            glaml.DocNodeSeq([
-              glaml.DocNodeMap([
-                #(glaml.DocNodeStr("image"), glaml.DocNodeStr("ubuntu:latest")),
-                #(glaml.DocNodeStr("username"), glaml.DocNodeStr("stay-calm")),
-              ]),
-            ]),
-          ),
-        ]),
-      ),
-    ),
-  )
-
-  glaml.parse_file("./test/test2.yaml")
-  |> should.equal(
-    Ok(
-      glaml.Document(
-        glaml.DocNodeSeq([
-          glaml.DocNodeMap([
-            #(glaml.DocNodeStr("name"), glaml.DocNodeStr("Gleam")),
-            #(
-              glaml.DocNodeStr("repo-url"),
-              glaml.DocNodeStr("https://github.com/gleam-lang/gleam"),
-            ),
-            #(glaml.DocNodeStr("nil"), glaml.DocNodeNil),
-            #(glaml.DocNodeStr("nil2"), glaml.DocNodeNil),
-            #(
-              glaml.DocNodeStr("items"),
-              glaml.DocNodeMap([
-                #(glaml.DocNodeStr("milk"), glaml.DocNodeStr("1L")),
-                #(glaml.DocNodeStr("apple"), glaml.DocNodeInt(10)),
-                #(glaml.DocNodeStr("egg"), glaml.DocNodeStr("dozen")),
-              ]),
-            ),
-          ]),
-        ]),
-      ),
+  should.equal(
+    b,
+    glaml.Document(
+      glaml.NodeMap([
+        #(glaml.NodeStr("x"), glaml.NodeInt(0)),
+        #(glaml.NodeStr("y"), glaml.NodeInt(0)),
+        #(glaml.NodeStr("z"), glaml.NodeInt(0)),
+      ]),
     ),
   )
 }
 
-pub fn get_test() {
-  let assert Ok(doc) = glaml.parse_file("./test/test2.yaml")
+pub fn parse_file_test() {
+  let assert Ok(docs) = glaml.parse_file("./test/multi_document.yaml")
 
-  let assert Ok(doc_node) =
-    glaml.doc_node(doc)
-    |> glaml.get([])
+  should.equal(docs, [
+    glaml.Document(glaml.NodeMap([#(glaml.NodeStr("doc"), glaml.NodeInt(1))])),
+    glaml.Document(glaml.NodeMap([#(glaml.NodeStr("doc"), glaml.NodeInt(2))])),
+    glaml.Document(glaml.NodeMap([#(glaml.NodeStr("doc"), glaml.NodeInt(3))])),
+  ])
+}
 
-  should.equal(doc_node, glaml.doc_node(doc))
+pub fn selector_test() {
+  let assert Ok([doc]) = glaml.parse_file("./test/test.yaml")
 
-  glaml.get(doc_node, [glaml.Seq(0), glaml.Map("items"), glaml.Map("apple")])
-  |> should.equal(Ok(glaml.DocNodeInt(10)))
-
-  glaml.get(doc_node, [glaml.Seq(1), glaml.Map("items")])
-  |> should.equal(Error(glaml.NodeNotFound("reverse_idx:1,seq:1")))
+  glaml.document_root(doc)
+  |> glaml.select(
+    glaml.Selector([
+      glaml.SelectSeq(0),
+      glaml.SelectMap(glaml.NodeStr("item_count")),
+    ]),
+  )
+  |> should.equal(Ok(glaml.NodeInt(7)))
 }
 
 pub fn sugar_test() {
-  let assert Ok(doc) = glaml.parse_file("./test/test2.yaml")
+  let assert Ok([doc]) = glaml.parse_file("./test/test.yaml")
 
-  let assert Ok(doc) =
-    glaml.doc_node(doc)
-    |> glaml.sugar("")
+  glaml.select_sugar(glaml.document_root(doc), "#0.display name")
+  |> should.equal(Ok(glaml.NodeStr("snow leopard")))
+}
 
-  glaml.sugar(doc, ".#0...repo-url..")
-  |> should.equal(Ok(glaml.DocNodeStr("https://github.com/gleam-lang/gleam")))
+pub fn unicode_test() {
+  let assert Ok([doc]) = glaml.parse_file("./test/unicode_test.yaml")
+
+  glaml.select_sugar(glaml.document_root(doc), "records.#0.title")
+  |> should.equal(Ok(glaml.NodeStr("健康サポート")))
+}
+
+pub fn error_test() {
+  let node =
+    glaml.NodeSeq([glaml.NodeMap([#(glaml.NodeStr("valid"), glaml.NodeNil)])])
+
+  glaml.select(
+    from: node,
+    selector: glaml.Selector([
+      glaml.SelectSeq(0),
+      glaml.SelectMap(glaml.NodeStr("invalid")),
+    ]),
+  )
+  |> should.equal(Error(glaml.NodeNotFound(1)))
+
+  glaml.parse_selector("#invalid index")
+  |> should.equal(Error(glaml.SelectorParseError))
 }
