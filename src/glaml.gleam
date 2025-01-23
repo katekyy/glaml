@@ -92,7 +92,7 @@ pub type SelectorError {
 ///   #(NodeStr("linked"), NodeBool(False)),
 /// ])
 ///
-/// let assert Ok(NodeInt(101)) = select_sugar("list.elements.#0")
+/// let assert Ok(NodeInt(101)) = select_sugar(from: map, selector: "list.elements.#0")
 /// ```
 ///
 pub fn select_sugar(
