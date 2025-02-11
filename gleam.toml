@@ -1,5 +1,5 @@
 name = "glaml"
-version = "3.0.1"
+version = "3.0.2"
 
 licences = ["MIT"]
 
@@ -17,7 +17,7 @@ target = "erlang"
 extra_applications = ["yamerl"]
 
 [dependencies]
-gleam_stdlib = ">= 0.34.0 and < 2.0.0"
+gleam_stdlib = ">= 0.54.0 and < 2.0.0"
 yamerl = ">= 0.10.0 and < 1.0.0"
 
 [dev-dependencies]

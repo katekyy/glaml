@@ -185,7 +185,7 @@ fn do_parse_selector(
     [part, ..tail] ->
       case string.starts_with(part, "#") {
         True ->
-          case int.parse(string.drop_left(part, 1)) {
+          case int.parse(string.drop_start(part, 1)) {
             Ok(index) -> do_parse_selector(tail, [SelectSeq(index), ..acc])
             Error(Nil) -> Error(SelectorParseError)
           }
